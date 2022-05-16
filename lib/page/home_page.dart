@@ -39,7 +39,9 @@ class _HomePageState extends State<HomePage> {
         builder: (BuildContext context, AsyncSnapshot<String> model) {
           if (model.hasData) {
             return Center(
-              child: Text(model.data!),
+              child:
+                  // print(model.data),
+                  Text(model.data!),
             );
           }
           return const Center(
