@@ -62,6 +62,8 @@ class APIService {
     }
   }
 
+/* surya custom code */
+
   static Future<RegisterResponceModel> register(
       RegisterRequestModel model) async {
     Map<String, String> requestHeaders = {
@@ -82,5 +84,58 @@ class APIService {
     );
 
     return registerResponceModel(response.body);
+  }
+
+// /* snippet github code  */
+//   static Future<RegisterResponceModel> register(
+//     RegisterRequestModel model,
+//   ) async {
+//     Map<String, String> requestHeaders = {
+//       'Content-Type': 'application/json',
+//     };
+
+//     var url = Uri.http(
+//       Config.apiURL,
+//       Config.registerAPI,
+//     );
+
+//     var response = await client.post(
+//       url,
+//       headers: requestHeaders,
+//       body: jsonEncode(model.toJson()),
+//     );
+
+//     return registerResponceModel(
+//       response.body,
+//     );
+//   }
+
+  static Future<String> getUserProfile() async {
+    var loginDetails = await SharedServices.loginDetails();
+
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      // 'Authorization': 'Basic ${loginDetails!.payload.AcessToken}'
+      'Authorization': 'Basic ${loginDetails!.payload.AcessToken}'
+    };
+
+    //https://e-commerce-node-deploy.herokuapp.com/api/auth/login
+
+    // var url =
+    //     Uri.https("e-commerce-node-deploy.herokuapp.com", "/api/auth/login");
+
+    var url = Uri.http(Config.apiURL, Config.userProfileAPI);
+
+    var response = await client.get(
+      url,
+      headers: requestHeaders,
+    );
+
+    if (response.statusCode == 200) {
+      //SHARED
+      return response.body;
+    } else {
+      return "";
+    }
   }
 }

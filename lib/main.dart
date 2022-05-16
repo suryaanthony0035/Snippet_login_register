@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:snippet_login_regis_nodejs_api/page/home_page.dart';
 import 'package:snippet_login_regis_nodejs_api/page/login_page.dart';
 import 'package:snippet_login_regis_nodejs_api/page/register_page.dart';
+import 'package:snippet_login_regis_nodejs_api/services/shared_service.dart';
 
-void main() {
+Widget _defaultHome = const LoginPage();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  bool _result = await SharedServices.isLoggedIn();
+
+  if (_result) {
+    _defaultHome = const HomePage();
+  }
+
   runApp(const MyApp());
 }
 
@@ -19,7 +29,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        '/': (context) => const LoginPage(),
+        '/': (context) => _defaultHome,
         '/home': (context) => const HomePage(),
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
