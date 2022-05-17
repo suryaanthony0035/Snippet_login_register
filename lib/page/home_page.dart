@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Flutter_Nodejs"),
+        title: const Text("Flutter_Nodejs"),
         elevation: 0,
         actions: [
           IconButton(
