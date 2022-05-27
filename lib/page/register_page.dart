@@ -7,6 +7,7 @@ import 'package:snippet_login_regis_nodejs_api/config.dart';
 import 'package:snippet_login_regis_nodejs_api/model/register_requwst_model.dart';
 import 'package:snippet_login_regis_nodejs_api/services/api_services.dart';
 import 'package:snippet_login_regis_nodejs_api/model/register_response_model.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -25,10 +26,17 @@ class _RegisterPageState extends State<RegisterPage> {
   String? email;
 
   @override
+  void initState() {
+    Provider.of<APIService>(context, listen: false);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: HexColor("#283B71"),
+        backgroundColor: HexColor("#59981A"),
+        // backgroundColor: Colors.green,
         body: ProgressHUD(
           child: Form(
             key: globalFormKey,
@@ -43,6 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _registerUI(BuildContext context) {
+    var apiService = Provider.of<APIService>(context);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -64,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Align(
                   alignment: Alignment.center,
                   child: Image.asset(
-                    "assets/images/logo.png",
+                    "assets/images/logo.jpg",
                     height: 50,
                     width: 50,
                     fit: BoxFit.contain,
@@ -232,7 +241,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       email: email!,
                       password: password!,
                       conformPassword: conformpassword!);
-                  APIService.register(model).then((responce) {
+                  apiService.register(model).then((responce) {
                     setState(() {
                       isAPIcallProcess = false;
                     });
@@ -255,9 +264,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   });
                 }
               },
-              btnColor: HexColor('#283B71'),
+              btnColor: HexColor('#ffffff'),
               borderColor: Colors.white,
-              txtColor: Colors.white,
+              txtColor: Colors.black,
               borderRadius: 10,
             ),
           ),
@@ -270,7 +279,7 @@ class _RegisterPageState extends State<RegisterPage> {
               padding: const EdgeInsets.only(right: 25, top: 10),
               child: RichText(
                 text: TextSpan(
-                    style: TextStyle(color: Colors.grey, fontSize: 14.0),
+                    style: TextStyle(color: Colors.white, fontSize: 14.0),
                     children: <TextSpan>[
                       TextSpan(text: "You have already account  "),
                       TextSpan(
@@ -297,6 +306,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final form = globalFormKey.currentState;
     if (form!.validate()) {
       form.save();
+
       return true;
     } else {
       return false;

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 import 'package:snippet_coder_utils/hex_color.dart';
@@ -25,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: HexColor("#283B71"),
+        backgroundColor: HexColor("#59981A"),
         body: ProgressHUD(
           child: Form(
             key: globalFormKey,
@@ -40,6 +41,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _loginUI(BuildContext context) {
+    var apiLogin = Provider.of<APIService>(context);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -61,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                 Align(
                   alignment: Alignment.center,
                   child: Image.asset(
-                    "assets/images/logo.png",
+                    "assets/images/logo.jpg",
                     height: 50,
                     width: 50,
                     fit: BoxFit.contain,
@@ -183,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
                   });
                   LoginRequestModel model =
                       LoginRequestModel(email: email!, password: password!);
-                  APIService.login(model).then((responce) {
+                  apiLogin.login(model).then((responce) {
                     setState(() {
                       isAPIcallProcess = false;
                     });
@@ -200,9 +202,9 @@ class _LoginPageState extends State<LoginPage> {
                   });
                 }
               },
-              btnColor: HexColor('#283B71'),
+              btnColor: HexColor('#ffffff'),
               borderColor: Colors.white,
-              txtColor: Colors.white,
+              txtColor: Colors.black,
               borderRadius: 10,
             ),
           ),
@@ -228,7 +230,7 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.only(right: 25, top: 10),
               child: RichText(
                 text: TextSpan(
-                    style: TextStyle(color: Colors.grey, fontSize: 14.0),
+                    style: TextStyle(color: Colors.white, fontSize: 14.0),
                     children: <TextSpan>[
                       TextSpan(text: "Don't have an account ? "),
                       TextSpan(

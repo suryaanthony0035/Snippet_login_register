@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:snippet_login_regis_nodejs_api/config.dart';
 import 'package:snippet_login_regis_nodejs_api/model/login_requwst_model.dart';
@@ -8,42 +9,16 @@ import 'package:snippet_login_regis_nodejs_api/model/login_response_model.dart';
 import 'package:snippet_login_regis_nodejs_api/model/register_requwst_model.dart';
 import 'package:snippet_login_regis_nodejs_api/model/register_response_model.dart';
 import 'package:snippet_login_regis_nodejs_api/services/shared_service.dart';
+import 'package:provider/provider.dart';
 
-// class APIServices {
-//   static var client = HttpClient();
-
-//   static Future<bool> login(LoginRequestModel model) async {
-//     Map<String, String> requestHeaders = {
-//       'Content-Type': 'application/json',
-//     };
-//     var url = Uri.http(Config.apiURL, Config.loginAPI);
-
-//     var response = await client.post(
-//       url,
-//       headers: requestHeaders,
-//       body: jsonEncode(model.toJson()),
-//     );
-
-//     if (response.statusCode == 200) {
-//       return true;
-//     } else {
-//       return false;
-//     }
-//   }
-// }
-
-class APIService {
+class APIService extends ChangeNotifier {
   static var client = http.Client();
+  SharedServices sharedServices = SharedServices();
 
-  static Future<bool> login(LoginRequestModel model) async {
+  Future<bool> login(LoginRequestModel model) async {
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json',
     };
-
-    //https://e-commerce-node-deploy.herokuapp.com/api/auth/login
-
-    // var url =
-    //     Uri.https("e-commerce-node-deploy.herokuapp.com", "/api/auth/login");
 
     var url = Uri.http(Config.apiURL, Config.loginAPI);
 
@@ -55,7 +30,8 @@ class APIService {
 
     if (response.statusCode == 200) {
       //SHARED
-      await SharedServices.setLoginDetails(loginResponceJson(response.body));
+      await sharedServices.setLoginDetails(loginResponceJson(response.body));
+      notifyListeners();
       return true;
     } else {
       return false;
@@ -64,16 +40,10 @@ class APIService {
 
 /* surya custom code */
 
-  static Future<RegisterResponceModel> register(
-      RegisterRequestModel model) async {
+  Future<RegisterResponceModel> register(RegisterRequestModel model) async {
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json',
     };
-
-    //https://e-commerce-node-deploy.herokuapp.com/api/auth/login
-
-    // var url =
-    //     Uri.https("e-commerce-node-deploy.herokuapp.com", "/api/auth/login");
 
     var url = Uri.http(Config.apiURL, Config.registerAPI);
 
@@ -82,47 +52,18 @@ class APIService {
       headers: requestHeaders,
       body: jsonEncode(model.toJson()),
     );
-
+    notifyListeners();
     return registerResponceModel(response.body);
   }
 
-// /* snippet github code  */
-//   static Future<RegisterResponceModel> register(
-//     RegisterRequestModel model,
-//   ) async {
-//     Map<String, String> requestHeaders = {
-//       'Content-Type': 'application/json',
-//     };
-
-//     var url = Uri.http(
-//       Config.apiURL,
-//       Config.registerAPI,
-//     );
-
-//     var response = await client.post(
-//       url,
-//       headers: requestHeaders,
-//       body: jsonEncode(model.toJson()),
-//     );
-
-//     return registerResponceModel(
-//       response.body,
-//     );
-//   }
-
-  static Future<String> getUserProfile() async {
-    var loginDetails = await SharedServices.loginDetails();
+  Future<String> getUserProfile() async {
+    var loginDetails = await sharedServices.loginDetails();
 
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json',
       // 'Authorization': 'Basic ${loginDetails!.payload.AcessToken}'
       'Authorization': 'Basic ${loginDetails!.payload.AcessToken}'
     };
-
-    //https://e-commerce-node-deploy.herokuapp.com/api/auth/login
-
-    // var url =
-    //     Uri.https("e-commerce-node-deploy.herokuapp.com", "/api/auth/login");
 
     var url = Uri.http(Config.apiURL, Config.userProfileAPI);
 
@@ -132,6 +73,7 @@ class APIService {
     );
 
     if (response.statusCode == 200) {
+      notifyListeners();
       //SHARED
       return response.body;
     } else {

@@ -6,13 +6,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:snippet_login_regis_nodejs_api/model/login_response_model.dart';
 
 class SharedServices {
-  static Future<bool> isLoggedIn() async {
+  Future<bool> isLoggedIn() async {
     var isKeyExist =
         await APICacheManager().isAPICacheKeyExist("login_details");
+
     return isKeyExist;
   }
 
-  static Future<LoginResponceModel?> loginDetails() async {
+  Future<LoginResponceModel?> loginDetails() async {
     var isKeyExist =
         await APICacheManager().isAPICacheKeyExist("login_details");
     if (isKeyExist) {
@@ -22,18 +23,20 @@ class SharedServices {
     }
   }
 
-  static Future<void> setLoginDetails(
+  Future<void> setLoginDetails(
     LoginResponceModel model,
   ) async {
     APICacheDBModel cacheDBModel = APICacheDBModel(
       key: "login_details",
       syncData: jsonEncode(model.toJson()),
     );
+
     await APICacheManager().addCacheData(cacheDBModel);
   }
 
   static Future<void> logout(BuildContext context) async {
     await APICacheManager().deleteCache("login_details");
+
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
 }
