@@ -35,7 +35,7 @@ class SignleProduct extends StatelessWidget {
                     height: 150,
                     padding: EdgeInsets.all(5),
                     width: double.infinity,
-                    child: Image.asset(productImage),
+                    child: Image.network(productImage),
                   ),
                 ),
                 Expanded(
