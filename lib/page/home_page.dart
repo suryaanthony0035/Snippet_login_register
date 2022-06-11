@@ -1,3 +1,5 @@
+import 'package:badges/badges.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snippet_coder_utils/hex_color.dart';
@@ -8,9 +10,11 @@ import 'package:snippet_login_regis_nodejs_api/services/api_services.dart';
 import 'package:snippet_login_regis_nodejs_api/services/shared_service.dart';
 
 import '../config.dart';
+import '../model/fruit_products/payload.dart';
 import '../model/get_product_img/payload.dart';
 import '../model/get_products/payload.dart';
 import '../providers/homepage_view_model.dart';
+import 'search/searchpage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,7 +24,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Widget _buildHerbsProduct(context, List<ImgPayload> imgPayload) {
+  Widget _buildHerbsProduct(context, List<FruitPayload> fruitPayload) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,10 +33,13 @@ class _HomePageState extends State<HomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Herbs Seasonings"),
+              Text(
+                "Herbs Seasonings",
+                style: TextStyle(color: Colors.white),
+              ),
               Text(
                 "View all",
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: Colors.white),
               ),
             ],
           ),
@@ -40,178 +47,185 @@ class _HomePageState extends State<HomePage> {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-              children: List.generate(imgPayload.length, (index) {
-            var model = imgPayload[index];
-            return SignleProduct(
-              onTaps: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ProductOverview(
-                      productImage: (model.img?.startsWith("http") ?? false)
-                          ? model.img ?? ""
-                          : "${Config.getImageUrl}${model.img}",
-                      productName: model.name ?? "",
-                    ),
-                  ),
+            children: List.generate(
+              fruitPayload.length,
+              (index) {
+                var model = fruitPayload[index];
+                return SignleProduct(
+                  onTaps: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProductOverview(
+                          productImage: (model.img?.startsWith("http") ?? false)
+                              ? model.img ?? ""
+                              : "${model.img}",
+                          productName: model.name ?? "",
+                          productPrice: (model.price.toString()),
+                          productDescription: model.description.toString(),
+                        ),
+                      ),
+                    );
+                  },
+                  productImage: (model.img?.startsWith("http") ?? false)
+                      ? model.img ?? ""
+                      : "${model.img}",
+                  productName: model.name ?? "",
+                  productPrice: model.price.toString(),
                 );
               },
-              productImage: (model.img?.startsWith("http") ?? false)
-                  ? model.img ?? ""
-                  : "${Config.getImageUrl}${model.img}",
-              productName: model.name ?? "",
-            );
-          })),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFreshProduct() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Fresh Fruits"),
-              Text(
-                "View all",
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
-          ),
-        ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              SignleProduct(
-                onTaps: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ProductOverview(
-                        productImage: "assets/images/apple1.png",
-                        productName: "Apple ",
-                      ),
-                    ),
-                  );
-                },
-                productImage: 'assets/images/apple1.png',
-                productName: 'Fresh mint',
-              ),
-              SignleProduct(
-                onTaps: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ProductOverview(
-                        productImage: "assets/images/orange.png",
-                        productName: "Orange ",
-                      ),
-                    ),
-                  );
-                },
-                productImage: 'assets/images/orange.png',
-                productName: 'Fresh mint',
-              ),
-              SignleProduct(
-                onTaps: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ProductOverview(
-                        productImage: "assets/images/banana.png",
-                        productName: "Banana ",
-                      ),
-                    ),
-                  );
-                },
-                productImage: 'assets/images/banana.png',
-                productName: 'Fresh mint',
-              ),
-            ],
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildVegtableProduct() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Fresh Vegtables"),
-              Text(
-                "View all",
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
-          ),
-        ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              SignleProduct(
-                onTaps: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ProductOverview(
-                        productImage: "assets/images/carat.png",
-                        productName: "Carrot ",
-                      ),
-                    ),
-                  );
-                },
-                productImage: 'assets/images/carat.png',
-                productName: 'Carrot',
-              ),
-              SignleProduct(
-                onTaps: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ProductOverview(
-                        productImage: "assets/images/onion.png",
-                        productName: "Onion ",
-                      ),
-                    ),
-                  );
-                },
-                productImage: 'assets/images/onion.png',
-                productName: 'Onion',
-              ),
-              SignleProduct(
-                onTaps: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ProductOverview(
-                        productImage: "assets/images/img3.png",
-                        productName: "Aubergine ",
-                      ),
-                    ),
-                  );
-                },
-                productImage: 'assets/images/img3.png',
-                productName: 'Aubergine',
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildFreshProduct() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Padding(
+  //         padding: const EdgeInsets.symmetric(vertical: 15),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Text("Fresh Fruits"),
+  //             Text(
+  //               "View all",
+  //               style: TextStyle(color: Colors.grey),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       SingleChildScrollView(
+  //         scrollDirection: Axis.horizontal,
+  //         child: Row(
+  //           children: [
+  //             SignleProduct(
+  //               onTaps: () {
+  //                 Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                     builder: (_) => ProductOverview(
+  //                       productImage: "assets/images/apple1.png",
+  //                       productName: "Apple ",
+  //                     ),
+  //                   ),
+  //                 );
+  //               },
+  //               productImage: 'assets/images/apple1.png',
+  //               productName: 'Fresh mint',
+  //             ),
+  //             SignleProduct(
+  //               onTaps: () {
+  //                 Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                     builder: (_) => ProductOverview(
+  //                       productImage: "assets/images/orange.png",
+  //                       productName: "Orange ",
+  //                     ),
+  //                   ),
+  //                 );
+  //               },
+  //               productImage: 'assets/images/orange.png',
+  //               productName: 'Fresh mint',
+  //             ),
+  //             SignleProduct(
+  //               onTaps: () {
+  //                 Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                     builder: (_) => ProductOverview(
+  //                       productImage: "assets/images/banana.png",
+  //                       productName: "Banana ",
+  //                     ),
+  //                   ),
+  //                 );
+  //               },
+  //               productImage: 'assets/images/banana.png',
+  //               productName: 'Fresh mint',
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  // Widget _buildVegtableProduct() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Padding(
+  //         padding: const EdgeInsets.symmetric(vertical: 15),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Text("Fresh Vegtables"),
+  //             Text(
+  //               "View all",
+  //               style: TextStyle(color: Colors.grey),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       SingleChildScrollView(
+  //         scrollDirection: Axis.horizontal,
+  //         child: Row(
+  //           children: [
+  //             SignleProduct(
+  //               onTaps: () {
+  //                 Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                     builder: (_) => ProductOverview(
+  //                       productImage: "assets/images/carat.png",
+  //                       productName: "Carrot ",
+  //                     ),
+  //                   ),
+  //                 );
+  //               },
+  //               productImage: 'assets/images/carat.png',
+  //               productName: 'Carrot',
+  //             ),
+  //             SignleProduct(
+  //               onTaps: () {
+  //                 Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                     builder: (_) => ProductOverview(
+  //                       productImage: "assets/images/onion.png",
+  //                       productName: "Onion ",
+  //                     ),
+  //                   ),
+  //                 );
+  //               },
+  //               productImage: 'assets/images/onion.png',
+  //               productName: 'Onion',
+  //             ),
+  //             SignleProduct(
+  //               onTaps: () {
+  //                 Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                     builder: (_) => ProductOverview(
+  //                       productImage: "assets/images/img3.png",
+  //                       productName: "Aubergine ",
+  //                     ),
+  //                   ),
+  //                 );
+  //               },
+  //               productImage: 'assets/images/img3.png',
+  //               productName: 'Aubergine',
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -222,6 +236,29 @@ class _HomePageState extends State<HomePage> {
     }, builder: (context, viewmodel) {
       return Consumer<GetProduct>(builder: (context, viewmodel, _) {
         return Scaffold(
+          bottomNavigationBar: CurvedNavigationBar(
+              height: 60,
+              backgroundColor: Colors.green,
+              color: Colors.green.shade200,
+              animationDuration: Duration(milliseconds: 300),
+              items: const [
+                Icon(
+                  Icons.home,
+                  color: Colors.white,
+                ),
+                Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
+                Icon(
+                  Icons.favorite,
+                  color: Colors.white,
+                ),
+                Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
+              ]),
           drawer: Drawer(
             child: DrawerSide(),
           ),
@@ -229,26 +266,51 @@ class _HomePageState extends State<HomePage> {
             title: const Text("Shopy"),
             elevation: 0,
             actions: [
-              CircleAvatar(
-                radius: 12,
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.search,
-                  size: 17,
-                  color: HexColor("#59981A"),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: CircleAvatar(
-                  radius: 12,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.shopping_bag,
-                    size: 17,
-                    color: HexColor("#59981A"),
+              Center(
+                child: Badge(
+                  badgeColor: Colors.green,
+                  badgeContent: Text(
+                    '0',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  animationDuration: Duration(milliseconds: 300),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                    child: CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.shopping_bag,
+                        size: 19,
+                        color: HexColor("#59981A"),
+                      ),
+                    ),
                   ),
                 ),
+              ),
+              // CircleAvatar(
+              //   radius: 12,
+              //   backgroundColor: Colors.white,
+              //   child: Icon(
+              //     Icons.search,
+              //     size: 17,
+              //     color: HexColor("#59981A"),
+              //   ),
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 5),
+              //   child: CircleAvatar(
+              //     radius: 15,
+              //     backgroundColor: Colors.white,
+              //     child: Icon(
+              //       Icons.shopping_bag,
+              //       size: 19,
+              //       color: HexColor("#59981A"),
+              //     ),
+              //   ),
+              // ),
+              SizedBox(
+                width: 5,
               ),
               IconButton(
                 onPressed: () {
@@ -256,13 +318,14 @@ class _HomePageState extends State<HomePage> {
                 },
                 icon: const Icon(
                   Icons.logout,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
               ),
             ],
             backgroundColor: HexColor("#59981A"),
           ),
-          backgroundColor: Color(0xffcbcbcb),
+          // backgroundColor: Color(0xffcbcbcb),
+          backgroundColor: Colors.green,
           body: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: ListView(
@@ -325,7 +388,7 @@ class _HomePageState extends State<HomePage> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 25),
                                 child: Text(
-                                  "All Vegetables Products ",
+                                  "All Vegetables and Fruit Products ",
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
@@ -341,9 +404,9 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                _buildHerbsProduct(context, viewmodel.imgPayload),
-                _buildFreshProduct(),
-                _buildVegtableProduct()
+                _buildHerbsProduct(context, viewmodel.fruitPayload),
+                // _buildFreshProduct(),
+                // _buildVegtableProduct()
                 // userProfile(),
               ],
             ),

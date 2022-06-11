@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../config.dart';
+import '../model/fruit_products/fruit_products.dart';
+import '../model/fruit_products/payload.dart';
 import '../model/get_product_img/get_product_img.dart';
 import '../model/get_product_img/payload.dart';
 import '../model/get_products/get_products.dart';
@@ -15,9 +17,13 @@ class GetProduct extends ChangeNotifier {
   bool get isLoading => this._isLoading;
   set isLoading(bool value) => this._isLoading = value;
 
-  List<ImgPayload> _imgPayload = List.empty(growable: true);
-  List<ImgPayload> get imgPayload => this._imgPayload;
-  set imgPayload(List<ImgPayload> value) => this._imgPayload = value;
+  // List<ImgPayload> _imgPayload = List.empty(growable: true);
+  // List<ImgPayload> get imgPayload => this._imgPayload;
+  // set imgPayload(List<ImgPayload> value) => this._imgPayload = value;
+
+  List<FruitPayload> _fruitPayload = List.empty(growable: true);
+  List<FruitPayload> get fruitPayload => this._fruitPayload;
+  set fruitPayload(List<FruitPayload> value) => this._fruitPayload = value;
 
   // List<ProductPayload> _productPayload = List.empty(growable: true);
   // List<ProductPayload> get productPayload => this._productPayload;
@@ -49,8 +55,8 @@ class GetProduct extends ChangeNotifier {
       print("product");
       var decodejson = _decodeResponce(response);
 
-      var body = GetProductImg.fromJson(decodejson);
-      _imgPayload = body.payload ?? [];
+      var body = FruitProducts.fromJson(decodejson);
+      _fruitPayload = body.payload ?? [];
       print(decodejson);
       // await sharedServices.setLoginDetails(loginResponceJson(response.body));
 
